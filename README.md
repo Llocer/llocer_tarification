@@ -1,7 +1,16 @@
-# llocer_cso
+# llocer_tarification
 
-UNDER CONSTRUCTION
+This library provides the methods for EV tarification.
 
-Charging Station Operator for Electrical Vehicles
-- Supports EVSE's using OCPP protocol 
-- and, optionally, communication with eMSP using OCPI protocol
+## OCPI CDR
+
+In order to create and fill a CDR following OCPI 2.2.1 specification, the following statement must be used:
+
+	OcpiCdr cdr = OcpiTarification.fillCDR( tariffs, events, session ); 
+
+where:
+ - tariffs: List<OcpiTariff> with the applicable tariffs to this session
+ - events: List<OcppTransactionEventRequest> with the OCPP events received from the ChargingStation
+ - session: the OcpiSession with the eMSP/NAS 
+
+

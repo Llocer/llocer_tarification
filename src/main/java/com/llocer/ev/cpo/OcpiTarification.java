@@ -29,9 +29,7 @@ import com.llocer.ev.ocpp.msgs20.OcppTransactionEventRequest;
 
 public class OcpiTarification {
 
-	private final List<OcpiTariff> tariffs; 
 	private final List<OcppTransactionEventRequest> events;
-	private final OcpiSession session;
 	private final long tariffStart;
 	
 	private OcppTransactionEventRequest startEvent = null;
@@ -39,10 +37,8 @@ public class OcpiTarification {
 
 	private TariffMeasures tariffPeriods = null; // all interval with energy measures
 
-	public OcpiTarification( List<OcpiTariff> tariffs, List<OcppTransactionEventRequest> events, OcpiSession session ) {
-		this.tariffs = tariffs;
+	public OcpiTarification( List<OcppTransactionEventRequest> events, OcpiSession session ) {
 		this.events = events;
-		this.session = session;
 		this.tariffStart = session.getStartDatetime().toEpochMilli();
 	}
 
@@ -538,16 +534,17 @@ public class OcpiTarification {
 		Log.debug( "Tariffication.evalPeriodstype: totalCost=%f", cdr.getTotalCost() );
 	}
 
-	public OcpiCdr fillCDR() {
-		this.startEvent = events.get(0);
-		this.lastEvent = events.get( events.size()-1 );
+	static public OcpiCdr fillCDR( List<OcpiTariff> tariffs, List<OcppTransactionEventRequest> events, OcpiSession session ) {
+		OcpiTarification me = new OcpiTarification( events, session ); 
+		me.startEvent = events.get(0);
+		me.lastEvent = events.get( events.size()-1 );
 		
 		OcpiCdr cdr = new OcpiCdr();
 		
 		cdr.setCountryCode( session.getCountryCode() );
 		cdr.setPartyId( session.getPartyId() );
 		cdr.setStartDateTime( session.getStartDatetime() );
-		cdr.setEndDateTime( lastEvent.getTimestamp() );
+		cdr.setEndDateTime( me.lastEvent.getTimestamp() );
 		cdr.setSessionId( session.getId() );
 		cdr.setCdrToken( session.getCdrToken() );
 		cdr.setAuthMethod( session.getAuthMethod() );
@@ -557,15 +554,15 @@ public class OcpiTarification {
 		cdr.setSignedData(null); // TODO
 		cdr.setLastUpdated( Instant.now() );
 
-		tariffPeriods = new TariffMeasures();
-		initChargingTimes();
-		tariffPeriods.joinMeasure( collectMeasures( MeasurandEnum.ENERGY_ACTIVE_IMPORT_REGISTER, true, TariffMeasure::setEnergy ) );
-		tariffPeriods.joinMeasure( collectMeasures( MeasurandEnum.CURRENT_IMPORT, false, TariffMeasure::setCurrent ) );
-		tariffPeriods.joinMeasure( collectMeasures( MeasurandEnum.POWER_ACTIVE_IMPORT, false, TariffMeasure::setPower ) );
-		tariffPeriods.dump( "initial periods" );
+		me.tariffPeriods = new TariffMeasures();
+		me.initChargingTimes();
+		me.tariffPeriods.joinMeasure( me.collectMeasures( MeasurandEnum.ENERGY_ACTIVE_IMPORT_REGISTER, true, TariffMeasure::setEnergy ) );
+		me.tariffPeriods.joinMeasure( me.collectMeasures( MeasurandEnum.CURRENT_IMPORT, false, TariffMeasure::setCurrent ) );
+		me.tariffPeriods.joinMeasure( me.collectMeasures( MeasurandEnum.POWER_ACTIVE_IMPORT, false, TariffMeasure::setPower ) );
+		me.tariffPeriods.dump( "initial periods" );
 		
-		checkTariffs( tariffs );
-		fillCost( cdr );
+		me.checkTariffs( tariffs );
+		me.fillCost( cdr );
 		
 		session.setKwh( cdr.getTotalEnergy() );
 		session.setCurrency( cdr.getCurrency() );
