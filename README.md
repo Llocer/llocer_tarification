@@ -9,8 +9,8 @@ In order to create and fill a CDR following OCPI 2.2.1 specification, the follow
 	OcpiCdr cdr = OcpiTarification.makeCDR( tariffs, events, session ); 
 
 where:
- - tariffs: List<OcpiTariff> with the applicable tariffs to this session
- - events: List<OcppTransactionEventRequest> with the OCPP events received from the ChargingStation
- - session: the OcpiSession with the eMSP/NAS 
+ - List\<OcpiTariff\> tariffs: applicable tariffs to this session
+ - List\<OcppTransactionEventRequest\> events: OCPP events received from the ChargingStation
+ - OcpiSession session: session with the eMSP/NAS 
 
 
