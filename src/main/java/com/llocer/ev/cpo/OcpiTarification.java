@@ -565,7 +565,6 @@ public class OcpiTarification {
 		me.fillCost( cdr );
 		
 		session.setKwh( cdr.getTotalEnergy() );
-		session.setCurrency( cdr.getCurrency() );
 		session.setTotalCost( cdr.getTotalCost() );
 
 		return cdr;
