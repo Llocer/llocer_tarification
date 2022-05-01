@@ -534,7 +534,7 @@ public class OcpiTarification {
 		Log.debug( "Tariffication.evalPeriodstype: totalCost=%f", cdr.getTotalCost() );
 	}
 
-	static public OcpiCdr fillCDR( List<OcpiTariff> tariffs, List<OcppTransactionEventRequest> events, OcpiSession session ) {
+	static public OcpiCdr makeCDR( List<OcpiTariff> tariffs, List<OcppTransactionEventRequest> events, OcpiSession session ) {
 		OcpiTarification me = new OcpiTarification( events, session ); 
 		me.startEvent = events.get(0);
 		me.lastEvent = events.get( events.size()-1 );
