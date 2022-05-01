@@ -1,7 +1,0 @@
-{
-        "id": { "countryCode": "ES", "partyId": "MCS" },
-	"charging_stations": [ { 
-		"id":"RDAM 123", 
-		"location":"location1" } ],
-	"allowed_whitelist": "NEVER"
-}
