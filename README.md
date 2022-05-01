@@ -6,7 +6,7 @@ This library provides the methods for EV tarification.
 
 In order to create and fill a CDR following OCPI 2.2.1 specification, the following statement must be used:
 
-	OcpiCdr cdr = OcpiTarification.fillCDR( tariffs, events, session ); 
+	OcpiCdr cdr = OcpiTarification.makeCDR( tariffs, events, session ); 
 
 where:
  - tariffs: List<OcpiTariff> with the applicable tariffs to this session
